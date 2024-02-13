@@ -1,7 +1,23 @@
+using LeagueTables.Data.Context;
+using LeagueTables.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<LeagueTablesContext>(options =>
+{
+    var rootPath = builder.Environment.ContentRootPath;
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!.Replace("[DataDirectory]", rootPath);
+
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddIdentity<UserEntity, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<LeagueTablesContext>();
 
 var app = builder.Build();
 
