@@ -1,0 +1,94 @@
+﻿@model LeagueTables.Models.Table.TableRoundsModel
+
+@{
+    ViewData["Title"] = Model.TableName;
+
+    var firstRoundBtnDrawed = false;
+    var fistRoundContentDrawed = false;
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <nav>
+        <div class="nav nav-pills justify-content-center" id="rounds-tab" role="tablist">
+            @foreach (var round in Model.Rounds)
+            {
+                var roundName = ConvertRoundName(round.Name, round.RoundNumber);
+
+                <button class="nav-link @(firstRoundBtnDrawed? "" : "active")" id="rounds-@roundName-tab"
+                        data-bs-toggle="pill" data-bs-target="#rounds-@roundName" type="button" role="tab"
+                        aria-controls="rounds-@roundName" aria-selected="@(!firstRoundBtnDrawed)">
+                    @round.Name
+                </button>
+
+                firstRoundBtnDrawed = true;
+            }
+        </div>
+    </nav>
+</div>
+
+<div class="tab-content mt-3" id="rounds-tabContent">
+    @foreach (var round in Model.Rounds)
+    {
+        var tableName = ConvertRoundName(round.Name, round.RoundNumber);
+
+        <div id="rounds-@tableName" class="tab-pane fade @(fistRoundContentDrawed ? "" : "active show")" role="tabpanel" aria-labelledby="rounds-@tableName-tab" tabindex="0">
+
+            @if (round.Matches.Count > 0)
+            {
+                @foreach (var match in round.Matches)
+                {
+                    <div class="row">
+                        <div class="col-4">
+                            <span>@match.Date</span>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="row">
+
+                                @foreach (var score in match.Scores)
+                                {
+                                    <div class="col-10">
+                                        <span>@score.TeamName</span>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <span>@score.Score</span>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div>
+                    <p class="text-center">There is no matches for this round.</p>
+                </div>
+            }
+
+        </div>
+
+        fistRoundContentDrawed = true;
+    }
+</div>
+
+@functions
+{
+    public string ConvertRoundName(string? tableName, int roundNumber)
+    {
+        if (tableName is null)
+        {
+            return $"Round {roundNumber}";
+        }
+
+        return tableName.Replace(" ", "-");
+    }
+}

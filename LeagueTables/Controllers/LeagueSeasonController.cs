@@ -20,7 +20,6 @@ namespace LeagueTables.Controllers
                     .ThenInclude(e => e.TableScores)
                         .ThenInclude(e => e.Team);
 
-
             var model = await _mapper.ProjectTo<LeagueSeasonTablesModel>(query)
                 .FirstOrDefaultAsync(e => e.Id == seasonId);
 

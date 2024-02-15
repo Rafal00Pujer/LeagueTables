@@ -9,6 +9,10 @@ public class TableProfile : Profile
 {
     public TableProfile()
     {
-        CreateMap<TableEntity, TableModel>();
+        CreateMap<TableEntity, TableScoresModel>();
+
+        CreateMap<TableEntity, TableRoundsModel>()
+            .ForMember(m => m.TableName, 
+                o => o.MapFrom(s => $"{s.Season.League.Name} {s.Season.Name} {s.Name}"));
     }
 }

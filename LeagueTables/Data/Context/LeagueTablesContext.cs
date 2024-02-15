@@ -11,6 +11,8 @@ public class LeagueTablesContext(DbContextOptions options) : IdentityDbContext<U
 
     public DbSet<LeagueSeasonEntity> LeagueSeasonEntities { get; set; }
 
+    public DbSet<TableEntity> TableEntities { get; set; }
+
     public DbSet<MatchEntity> MatchEntities { get; set; }
 
     public DbSet<RoundEntity> RoundEntities { get; set; }

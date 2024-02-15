@@ -6,11 +6,11 @@ public class LeagueSeasonTablesModel
 {
     public Guid Id { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
-    public string LeagueName { get; set; }
+    public string LeagueName { get; set; } = string.Empty;
 
-    public ICollection<TableModel> Tables { get; set; } = new List<TableModel>();
+    public ICollection<TableScoresModel> Tables { get; set; } = new List<TableScoresModel>();
 }
