@@ -1,12 +1,14 @@
 using LeagueTables.Data.Context;
 using LeagueTables.Data.Entities;
+using LeagueTables.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 
 builder.Services.AddDbContext<LeagueTablesContext>(options =>
 {
@@ -16,10 +18,28 @@ builder.Services.AddDbContext<LeagueTablesContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddIdentity<UserEntity, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<LeagueTablesContext>();
+builder.Services.AddIdentity<UserEntity, IdentityRole<Guid>>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 4;
+
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<LeagueTablesContext>();
+
+builder.Services.AddAuthentication();
 
 var app = builder.Build();
+
+await app.AddAdminAndUserRolesAsync();
+
+if (app.Environment.IsDevelopment())
+{
+    await app.AddDefaultAdminAccountAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -34,6 +54,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
