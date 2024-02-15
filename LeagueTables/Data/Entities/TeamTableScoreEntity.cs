@@ -28,7 +28,7 @@ public class TeamTableScoreEntity
 
     public TeamEntity Team { get; set; } = null!;
 
-    public Guid SeasonId { get; set; }
+    public Guid TableId { get; set; }
 
-    public LeagueSeasonEntity Season { get; set; } = null!;
+    public TableEntity Table { get; set; } = null!;
 }

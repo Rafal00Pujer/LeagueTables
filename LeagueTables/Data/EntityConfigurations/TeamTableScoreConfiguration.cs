@@ -18,9 +18,9 @@ public class TeamTableScoreConfiguration : IEntityTypeConfiguration<TeamTableSco
             .HasPrincipalKey(fe => fe.Id)
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(e => e.Season)
-            .WithMany(fe => fe.TeamsScores)
-            .HasForeignKey(e => e.SeasonId)
+        builder.HasOne(e => e.Table)
+            .WithMany(fe => fe.TableScores)
+            .HasForeignKey(e => e.TableId)
             .HasPrincipalKey(fe => fe.Id)
             .OnDelete(DeleteBehavior.NoAction);
 

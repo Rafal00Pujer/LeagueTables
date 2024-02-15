@@ -16,7 +16,7 @@ public class LeagueSeasonEntity
 
     public LeagueEntity League { get; set; } = null!;
 
-    public ICollection<TeamTableScoreEntity> TeamsScores { get; set; } = new List<TeamTableScoreEntity>();
+    public ICollection<TableEntity> Tables { get; set; } = new List<TableEntity>();
 
     public ICollection<RoundEntity> Rounds { get; set; } = new List<RoundEntity>();
 

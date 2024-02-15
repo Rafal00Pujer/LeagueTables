@@ -119,6 +119,26 @@ namespace LeagueTables.Migrations
                     b.ToTable("Round", (string)null);
                 });
 
+            modelBuilder.Entity("LeagueTables.Data.Entities.TableEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SeasonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeasonId");
+
+                    b.ToTable("Table", (string)null);
+                });
+
             modelBuilder.Entity("LeagueTables.Data.Entities.TeamEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -192,7 +212,7 @@ namespace LeagueTables.Migrations
                         .HasColumnType("int")
                         .HasComputedColumnSql("[Wins] * 3 + [Draws]");
 
-                    b.Property<Guid>("SeasonId")
+                    b.Property<Guid>("TableId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TeamId")
@@ -203,7 +223,7 @@ namespace LeagueTables.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SeasonId");
+                    b.HasIndex("TableId");
 
                     b.HasIndex("TeamId");
 
@@ -470,6 +490,17 @@ namespace LeagueTables.Migrations
                     b.Navigation("Season");
                 });
 
+            modelBuilder.Entity("LeagueTables.Data.Entities.TableEntity", b =>
+                {
+                    b.HasOne("LeagueTables.Data.Entities.LeagueSeasonEntity", "Season")
+                        .WithMany("Tables")
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Season");
+                });
+
             modelBuilder.Entity("LeagueTables.Data.Entities.TeamMatchEntryEntity", b =>
                 {
                     b.HasOne("LeagueTables.Data.Entities.MatchEntity", "Match")
@@ -491,9 +522,9 @@ namespace LeagueTables.Migrations
 
             modelBuilder.Entity("LeagueTables.Data.Entities.TeamTableScoreEntity", b =>
                 {
-                    b.HasOne("LeagueTables.Data.Entities.LeagueSeasonEntity", "Season")
-                        .WithMany("TeamsScores")
-                        .HasForeignKey("SeasonId")
+                    b.HasOne("LeagueTables.Data.Entities.TableEntity", "Table")
+                        .WithMany("TableScores")
+                        .HasForeignKey("TableId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -503,7 +534,7 @@ namespace LeagueTables.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Season");
+                    b.Navigation("Table");
 
                     b.Navigation("Team");
                 });
@@ -583,7 +614,7 @@ namespace LeagueTables.Migrations
                 {
                     b.Navigation("Rounds");
 
-                    b.Navigation("TeamsScores");
+                    b.Navigation("Tables");
                 });
 
             modelBuilder.Entity("LeagueTables.Data.Entities.MatchEntity", b =>
@@ -594,6 +625,11 @@ namespace LeagueTables.Migrations
             modelBuilder.Entity("LeagueTables.Data.Entities.RoundEntity", b =>
                 {
                     b.Navigation("Matches");
+                });
+
+            modelBuilder.Entity("LeagueTables.Data.Entities.TableEntity", b =>
+                {
+                    b.Navigation("TableScores");
                 });
 
             modelBuilder.Entity("LeagueTables.Data.Entities.TeamEntity", b =>
