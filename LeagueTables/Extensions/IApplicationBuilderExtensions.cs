@@ -1,5 +1,6 @@
 ﻿using LeagueTables.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace LeagueTables.Extensions;
 
@@ -44,6 +45,15 @@ public static class IApplicationBuilderExtensions
 
         await AddRoleIfNotPresent(userManager, admin, IdentityRolesNames.User);
         await AddRoleIfNotPresent(userManager, admin, IdentityRolesNames.Admin);
+
+        return app;
+    }
+
+    public static IApplicationBuilder AssertMapperConfiguration(this IApplicationBuilder app)
+    {
+        using var serviceScope = app.ApplicationServices.CreateScope();
+        var mapperConf = serviceScope.ServiceProvider.GetRequiredService<AutoMapper.IConfigurationProvider>();
+        mapperConf.AssertConfigurationIsValid();
 
         return app;
     }

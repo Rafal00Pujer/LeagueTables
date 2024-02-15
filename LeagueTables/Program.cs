@@ -3,6 +3,7 @@ using LeagueTables.Data.Entities;
 using LeagueTables.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddIdentity<UserEntity, IdentityRole<Guid>>(options =>
 
 builder.Services.AddAuthentication();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 await app.AddAdminAndUserRolesAsync();
@@ -39,6 +42,8 @@ await app.AddAdminAndUserRolesAsync();
 if (app.Environment.IsDevelopment())
 {
     await app.AddDefaultAdminAccountAsync();
+
+    app.AssertMapperConfiguration();
 }
 
 // Configure the HTTP request pipeline.

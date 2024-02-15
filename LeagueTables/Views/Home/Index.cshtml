@@ -1,8 +1,54 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ICollection<LeagueTables.Models.League.LeagueModel>
+
+@{
+    ViewData["Title"] = "Leagues";
+
+    var leagueCouner = 0;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+
+    <h1 class="text-center">@ViewData["Title"]</h1>
+
+    <div class="accordion">
+
+        @foreach (var league in Model)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#League@(leagueCouner)" aria-expanded="true" aria-controls="League@(leagueCouner)">
+                        @league.Name
+                    </button>
+                </h2>
+
+                <div id="League@(leagueCouner)" class="accordion-collapse collapse @(leagueCouner == 0 ? "show" : "")">
+                    <div class="accordion-body">
+                        <div>
+                            @if (league.Description is not null)
+                            {
+                                <p>@league.Description</p>
+                            }
+                            else
+                            {
+                                <p>There is no description for this league.</p>
+                            }
+                        </div>
+
+                        <h4>Seasons</h4>
+
+                        <div class="btn-group text-center" role="group">
+
+                            @foreach (var season in league.Seasons)
+                            {
+                                <a asp-action="Tables" asp-controller="LeagueSeason" asp-route-seasonId="@season.Id" class="btn btn-primary">@season.Name</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            leagueCouner++;
+        }
+    </div>
 </div>

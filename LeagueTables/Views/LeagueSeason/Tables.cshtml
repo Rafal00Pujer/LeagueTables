@@ -1,0 +1,111 @@
+﻿@model LeagueTables.Models.LeagueSeason.LeagueSeasonTablesModel
+
+@{
+    ViewData["Title"] = $"{Model.LeagueName} {Model.Name}";
+
+    var tableScoresCount = 1;
+    var firstTableBtnDrawed = false;
+    var fistTableContentDrawed = false;
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <nav>
+        <div class="nav nav-pills justify-content-center" id="tables-tab" role="tablist">
+            @foreach (var table in Model.Tables)
+            {
+                var tableName = ConvertTableName(table.Name);
+
+                <button class="nav-link @(firstTableBtnDrawed? "" : "active")" id="tables-@tableName-tab"
+                        data-bs-toggle="pill" data-bs-target="#tables-@tableName" type="button" role="tab"
+                        aria-controls="tables-@tableName" aria-selected="@(!firstTableBtnDrawed)">
+                    @tableName
+                </button>
+
+                firstTableBtnDrawed = true;
+            }
+
+            <a class="nav-link">Rounds</a>
+        </div>
+    </nav>
+</div>
+
+<div class="tab-content mt-3" id="tables-tabContent">
+    @foreach (var table in Model.Tables)
+    {
+        tableScoresCount = 1;
+
+        var tableName = ConvertTableName(table.Name);
+
+        <div id="tables-@tableName" class="tab-pane fade @(fistTableContentDrawed ? "" : "active show")" role="tabpanel" aria-labelledby="tables-@tableName-tab" tabindex="0">
+
+            @if (table.TableScores.Count > 0)
+            {
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Team Name</th>
+
+                            <th scope="col">MP</th>
+                            <th scope="col">W</th>
+                            <th scope="col">D</th>
+                            <th scope="col">L</th>
+
+                            <th scope="col">GF</th>
+                            <th scope="col">GA</th>
+                            <th scope="col">GD</th>
+
+                            <th scope="col">PTS</th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var score in table.TableScores.OrderByDescending(x => x.Points))
+                    {
+                        <tbody>
+                            <tr>
+                                <th scope="row">@tableScoresCount</th>
+                                <th>@score.TeamName</th>
+
+                                <th>@score.MatchesPlayed</th>
+                                <th>@score.Wins</th>
+                                <th>@score.Draws</th>
+                                <th>@score.Losses</th>
+
+                                <th>@score.GoalsFor</th>
+                                <th>@score.GoalsAgainst</th>
+                                <th>@score.GoalsDifference</th>
+
+                                <th>@score.Points</th>
+                            </tr>
+                        </tbody>
+
+                        tableScoresCount++;
+                    }
+                </table>
+            }
+            else
+            {
+                <div>
+                    <p class="text-center">There is no scores for this table.</p>
+                </div>
+            }
+        </div>
+
+        fistTableContentDrawed = true;
+    }
+</div>
+
+@functions
+{
+    public string ConvertTableName(string tableName)
+    {
+        return tableName.Replace(" ", "-");
+    }
+}

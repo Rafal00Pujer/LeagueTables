@@ -1,21 +1,28 @@
+using AutoMapper;
+using LeagueTables.Data.Context;
 using LeagueTables.Models;
+using LeagueTables.Models.League;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace LeagueTables.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(LeagueTablesContext context, IMapper mapper) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        private readonly LeagueTablesContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var Query = _context.LeagueEntities
+                .Include(x => x.Seasons);
+
+            var model = await _mapper.ProjectTo<LeagueModel>(Query)
+                .ToListAsync();
+
+            return View(model);
         }
 
         public IActionResult Privacy()
