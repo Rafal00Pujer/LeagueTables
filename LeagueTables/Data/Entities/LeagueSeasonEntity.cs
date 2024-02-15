@@ -18,7 +18,5 @@ public class LeagueSeasonEntity
 
     public ICollection<TableEntity> Tables { get; set; } = new List<TableEntity>();
 
-    public ICollection<RoundEntity> Rounds { get; set; } = new List<RoundEntity>();
-
     public ICollection<TeamEntity> Teams { get; set; } = new List<TeamEntity>();
 }

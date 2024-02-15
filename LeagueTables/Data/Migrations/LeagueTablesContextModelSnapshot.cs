@@ -109,12 +109,12 @@ namespace LeagueTables.Migrations
                     b.Property<int>("RoundNumber")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SeasonId")
+                    b.Property<Guid>("TableId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SeasonId");
+                    b.HasIndex("TableId");
 
                     b.ToTable("Round", (string)null);
                 });
@@ -481,13 +481,13 @@ namespace LeagueTables.Migrations
 
             modelBuilder.Entity("LeagueTables.Data.Entities.RoundEntity", b =>
                 {
-                    b.HasOne("LeagueTables.Data.Entities.LeagueSeasonEntity", "Season")
+                    b.HasOne("LeagueTables.Data.Entities.TableEntity", "Table")
                         .WithMany("Rounds")
-                        .HasForeignKey("SeasonId")
+                        .HasForeignKey("TableId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Season");
+                    b.Navigation("Table");
                 });
 
             modelBuilder.Entity("LeagueTables.Data.Entities.TableEntity", b =>
@@ -612,8 +612,6 @@ namespace LeagueTables.Migrations
 
             modelBuilder.Entity("LeagueTables.Data.Entities.LeagueSeasonEntity", b =>
                 {
-                    b.Navigation("Rounds");
-
                     b.Navigation("Tables");
                 });
 
@@ -629,6 +627,8 @@ namespace LeagueTables.Migrations
 
             modelBuilder.Entity("LeagueTables.Data.Entities.TableEntity", b =>
                 {
+                    b.Navigation("Rounds");
+
                     b.Navigation("TableScores");
                 });
 

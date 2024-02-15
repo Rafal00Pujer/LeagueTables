@@ -12,9 +12,9 @@ public class RoundConfiguration : IEntityTypeConfiguration<RoundEntity>
 
         builder.HasKey(e => e.Id);
 
-        builder.HasOne(e => e.Season)
+        builder.HasOne(e => e.Table)
             .WithMany(fe => fe.Rounds)
-            .HasForeignKey(e => e.SeasonId)
+            .HasForeignKey(e => e.TableId)
             .HasPrincipalKey(fe => fe.Id)
             .OnDelete(DeleteBehavior.NoAction);
     }

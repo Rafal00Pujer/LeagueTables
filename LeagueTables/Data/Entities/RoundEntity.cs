@@ -12,9 +12,9 @@ public class RoundEntity
 
     public string? Name { get; set; }
 
-    public Guid SeasonId { get; set; }
+    public Guid TableId { get; set; }
 
-    public LeagueSeasonEntity Season { get; set; } = null!;
+    public TableEntity Table { get; set; } = null!;
 
     public ICollection<MatchEntity> Matches { get; set; } = new List<MatchEntity>();
 }
