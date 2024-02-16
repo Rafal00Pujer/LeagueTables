@@ -17,7 +17,7 @@ public class TableController(LeagueTablesContext context, IMapper mapper) : Cont
         var query = _context.TableEntities
             .Include(e => e.Season)
                 .ThenInclude(e => e.League)
-            .Include(e => e.Rounds.OrderBy(x => x.RoundNumber))
+            .Include(e => e.Rounds)
                 .ThenInclude(e => e.Matches)
                     .ThenInclude(e => e.TeamsEntries)
                         .ThenInclude(e => e.Team);

@@ -1,7 +1,7 @@
 ﻿@model LeagueTables.Models.Table.TableRoundsModel
 
 @{
-    ViewData["Title"] = Model.TableName;
+    ViewData["Title"] = $"{Model.TableName} Matches";
 
     var firstRoundBtnDrawed = false;
     var fistRoundContentDrawed = false;
@@ -16,7 +16,7 @@
 <div class="row mt-3">
     <nav>
         <div class="nav nav-pills justify-content-center" id="rounds-tab" role="tablist">
-            @foreach (var round in Model.Rounds)
+            @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
             {
                 var roundName = ConvertRoundName(round.Name, round.RoundNumber);
 
@@ -33,7 +33,7 @@
 </div>
 
 <div class="tab-content mt-3" id="rounds-tabContent">
-    @foreach (var round in Model.Rounds)
+    @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
     {
         var tableName = ConvertRoundName(round.Name, round.RoundNumber);
 
@@ -43,26 +43,34 @@
             {
                 @foreach (var match in round.Matches)
                 {
-                    <div class="row">
-                        <div class="col-4">
+                    <div class="row py-2 border-1 border">
+                        <div class="col-2 pt-2 border-1 border-end">
                             <span>@match.Date</span>
                         </div>
 
-                        <div class="col-8">
-                            <div class="row">
+                        <div class="col-10">
 
-                                @foreach (var score in match.Scores)
+                            @foreach (var (index, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
+                            {
+                                var borderLocationClass = "";
+
+                                if (index == 0)
                                 {
-                                    <div class="col-10">
+                                    borderLocationClass += "border-bottom";
+                                }
+
+                                <div class="row border-1 @borderLocationClass">
+
+                                    <div class="col-2">
                                         <span>@score.TeamName</span>
                                     </div>
 
-                                    <div class="col-2">
+                                    <div class="col-1 border-1 border-start">
                                         <span>@score.Score</span>
                                     </div>
-                                }
 
-                            </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 }
