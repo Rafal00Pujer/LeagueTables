@@ -7,6 +7,7 @@
 5. Doda³em widok z ligami i ich sezonami.
 6. Doda³em widok z tabelami sezonu.
 7. Doda³em widok z rundami i meczami tabeli.
+8. Doda³em wyœwietlanie meczów konkretnej dru¿yny w tabeli bez prze³adowywania strony u¿ywaj¹c AJAX.
 
 # To do
 

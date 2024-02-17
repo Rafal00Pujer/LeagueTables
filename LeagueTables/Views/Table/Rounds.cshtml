@@ -13,80 +13,89 @@
     </div>
 </div>
 
-<div class="row mt-3">
-    <nav>
-        <div class="nav nav-pills justify-content-center" id="rounds-tab" role="tablist">
-            @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
-            {
-                var roundName = ConvertRoundName(round.Name, round.RoundNumber);
-
-                <button class="nav-link @(firstRoundBtnDrawed? "" : "active")" id="rounds-@roundName-tab"
-                        data-bs-toggle="pill" data-bs-target="#rounds-@roundName" type="button" role="tab"
-                        aria-controls="rounds-@roundName" aria-selected="@(!firstRoundBtnDrawed)">
-                    @round.Name
-                </button>
-
-                firstRoundBtnDrawed = true;
-            }
-        </div>
-    </nav>
-</div>
-
-<div class="tab-content mt-3" id="rounds-tabContent">
-    @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
-    {
-        var tableName = ConvertRoundName(round.Name, round.RoundNumber);
-
-        <div id="rounds-@tableName" class="tab-pane fade @(fistRoundContentDrawed ? "" : "active show")" role="tabpanel" aria-labelledby="rounds-@tableName-tab" tabindex="0">
-
-            @if (round.Matches.Count > 0)
-            {
-                @foreach (var match in round.Matches)
+@if (Model.Rounds.Count == 0)
+{
+    <div class="mt-3">
+        <p class="text-center">There is no rounds for this table.</p>
+    </div>
+}
+else
+{
+    <div class="row mt-3">
+        <nav>
+            <div class="nav nav-pills justify-content-center" id="rounds-tab" role="tablist">
+                @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
                 {
-                    <div class="row py-2 border-1 border">
-                        <div class="col-2 pt-2 border-1 border-end">
-                            <span>@match.Date</span>
-                        </div>
+                    var roundName = ConvertRoundName(round.Name, round.RoundNumber);
 
-                        <div class="col-10">
+                    <button class="nav-link @(firstRoundBtnDrawed? "" : "active")" id="rounds-@roundName-tab"
+                            data-bs-toggle="pill" data-bs-target="#rounds-@roundName" type="button" role="tab"
+                            aria-controls="rounds-@roundName" aria-selected="@(!firstRoundBtnDrawed)">
+                        @round.Name
+                    </button>
 
-                            @foreach (var (index, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
-                            {
-                                var borderLocationClass = "";
+                    firstRoundBtnDrawed = true;
+                }
+            </div>
+        </nav>
+    </div>
 
-                                if (index == 0)
+    <div class="tab-content mt-3" id="rounds-tabContent">
+        @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
+        {
+            var tableName = ConvertRoundName(round.Name, round.RoundNumber);
+
+            <div id="rounds-@tableName" class="tab-pane fade @(fistRoundContentDrawed ? "" : "active show")" role="tabpanel" aria-labelledby="rounds-@tableName-tab" tabindex="0">
+
+                @if (round.Matches.Count > 0)
+                {
+                    @foreach (var match in round.Matches)
+                    {
+                        <div class="row py-2 border-1 border">
+                            <div class="col-2 pt-2 border-1 border-end">
+                                <span>@match.Date</span>
+                            </div>
+
+                            <div class="col-10">
+
+                                @foreach (var (index, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
                                 {
-                                    borderLocationClass += "border-bottom";
+                                    var borderLocationClass = "";
+
+                                    if (index == 0)
+                                    {
+                                        borderLocationClass += "border-bottom";
+                                    }
+
+                                    <div class="row border-1 @borderLocationClass">
+
+                                        <div class="col-2">
+                                            <span>@score.TeamName</span>
+                                        </div>
+
+                                        <div class="col-1 border-1 border-start">
+                                            <span>@score.Score</span>
+                                        </div>
+
+                                    </div>
                                 }
-
-                                <div class="row border-1 @borderLocationClass">
-
-                                    <div class="col-2">
-                                        <span>@score.TeamName</span>
-                                    </div>
-
-                                    <div class="col-1 border-1 border-start">
-                                        <span>@score.Score</span>
-                                    </div>
-
-                                </div>
-                            }
+                            </div>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div>
+                        <p class="text-center">There is no matches for this round.</p>
                     </div>
                 }
-            }
-            else
-            {
-                <div>
-                    <p class="text-center">There is no matches for this round.</p>
-                </div>
-            }
 
-        </div>
+            </div>
 
-        fistRoundContentDrawed = true;
-    }
-</div>
+            fistRoundContentDrawed = true;
+        }
+    </div>
+}
 
 @functions
 {
