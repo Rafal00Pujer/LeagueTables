@@ -1,4 +1,5 @@
-﻿@model LeagueTables.Models.Account.LoginModel;
+﻿@using LeagueTables.Controllers
+@model LeagueTables.Models.Account.LoginModel;
 
 @{
     ViewData["Title"] = "Login";
@@ -30,7 +31,7 @@
                 </div>
 
                 <div class="text-danger">
-                    @Html.ValidationMessage("LoginError")
+                    @Html.ValidationMessage(AccountController.LoginErrorName)
                 </div>
 
                 <div class="btn-group" role="group">

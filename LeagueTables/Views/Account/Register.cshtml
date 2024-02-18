@@ -1,4 +1,5 @@
-﻿@model LeagueTables.Models.Account.RegisterModel;
+﻿@using LeagueTables.Controllers
+@model LeagueTables.Models.Account.RegisterModel;
 
 @{
     ViewData["Title"] = "Register";
@@ -29,7 +30,7 @@
                 </div>
 
                 <div class="text-danger">
-                    @Html.ValidationMessage("RegisterError")
+                    @Html.ValidationMessage(AccountController.RegisterErrorName)
                 </div>
 
                 <div class="btn-group" role="group">

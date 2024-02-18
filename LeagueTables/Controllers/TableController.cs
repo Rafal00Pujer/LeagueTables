@@ -20,14 +20,15 @@ public class TableController(LeagueTablesContext context, IMapper mapper) : Cont
             .Include(e => e.Rounds)
                 .ThenInclude(e => e.Matches)
                     .ThenInclude(e => e.TeamsEntries)
-                        .ThenInclude(e => e.Team);
+                        .ThenInclude(e => e.Team)
+           .AsSplitQuery();
 
         var model = await _mapper.ProjectTo<TableRoundsModel>(query)
             .FirstOrDefaultAsync(e => e.Id == tableId);
 
         if (model is null)
         {
-            return RedirectToAction("Index", "Home");
+            return NotFound();
         }
 
         return View(model);

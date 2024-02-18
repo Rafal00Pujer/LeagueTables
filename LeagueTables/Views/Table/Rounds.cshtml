@@ -2,9 +2,6 @@
 
 @{
     ViewData["Title"] = $"{Model.TableName} Matches";
-
-    var firstRoundBtnDrawed = false;
-    var fistRoundContentDrawed = false;
 }
 
 <div class="row">
@@ -24,32 +21,27 @@ else
     <div class="row mt-3">
         <nav>
             <div class="nav nav-pills justify-content-center" id="rounds-tab" role="tablist">
-                @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
+                @foreach (var (index, round) in Enumerable.Range(0, Model.Rounds.Count()).Zip(Model.Rounds.OrderBy(x => x.RoundNumber)))
                 {
-                    var roundName = ConvertRoundName(round.Name, round.RoundNumber);
-
-                    <button class="nav-link @(firstRoundBtnDrawed? "" : "active")" id="rounds-@roundName-tab"
-                            data-bs-toggle="pill" data-bs-target="#rounds-@roundName" type="button" role="tab"
-                            aria-controls="rounds-@roundName" aria-selected="@(!firstRoundBtnDrawed)">
+                    <button id="rounds-@index-tab" class="nav-link @(index == 0 ? "active" : "")"
+                            data-bs-toggle="pill" data-bs-target="#rounds-@index" type="button" role="tab"
+                            aria-controls="rounds-@index" aria-selected="@(index == 0 ? "true" : "false")">
                         @round.Name
                     </button>
-
-                    firstRoundBtnDrawed = true;
                 }
             </div>
         </nav>
     </div>
 
     <div class="tab-content mt-3" id="rounds-tabContent">
-        @foreach (var round in Model.Rounds.OrderBy(x => x.RoundNumber))
+        @foreach (var (roundIndex, round) in Enumerable.Range(0, Model.Rounds.Count()).Zip(Model.Rounds.OrderBy(x => x.RoundNumber)))
         {
-            var tableName = ConvertRoundName(round.Name, round.RoundNumber);
-
-            <div id="rounds-@tableName" class="tab-pane fade @(fistRoundContentDrawed ? "" : "active show")" role="tabpanel" aria-labelledby="rounds-@tableName-tab" tabindex="0">
+            <div id="rounds-@roundIndex" class="tab-pane fade @(roundIndex == 0 ? "active show" : "")"
+                 role="tabpanel" aria-labelledby="rounds-@roundIndex-tab" tabindex="0">
 
                 @if (round.Matches.Count > 0)
                 {
-                    @foreach (var match in round.Matches)
+                    @foreach (var match in round.Matches.OrderBy(x => x.Date))
                     {
                         <div class="row py-2 border-1 border">
                             <div class="col-2 pt-2 border-1 border-end">
@@ -58,11 +50,11 @@ else
 
                             <div class="col-10">
 
-                                @foreach (var (index, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
+                                @foreach (var (scoreIndex, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
                                 {
                                     var borderLocationClass = "";
 
-                                    if (index == 0)
+                                    if (scoreIndex == 0)
                                     {
                                         borderLocationClass += "border-bottom";
                                     }
@@ -89,23 +81,7 @@ else
                         <p class="text-center">There is no matches for this round.</p>
                     </div>
                 }
-
             </div>
-
-            fistRoundContentDrawed = true;
         }
     </div>
-}
-
-@functions
-{
-    public string ConvertRoundName(string? tableName, int roundNumber)
-    {
-        if (tableName is null)
-        {
-            return $"Round {roundNumber}";
-        }
-
-        return tableName.Replace(" ", "-");
-    }
 }

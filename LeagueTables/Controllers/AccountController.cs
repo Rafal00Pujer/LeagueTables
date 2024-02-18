@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LeagueTables.Controllers;
 
-public class AccountController(UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager) : Controller
+public class AccountController(SignInManager<UserEntity> signInManager) : Controller
 {
-    private readonly UserManager<UserEntity> _userManager = userManager;
+    public const string RegisterErrorName = "RegisterError";
+    public const string LoginErrorName = "LoginError";
+
     private readonly SignInManager<UserEntity> _signInManager = signInManager;
+    private readonly UserManager<UserEntity> _userManager = signInManager.UserManager;
 
     [HttpGet]
     [AllowAnonymous]
@@ -40,7 +43,7 @@ public class AccountController(UserManager<UserEntity> userManager, SignInManage
 
         if (!result.Succeeded)
         {
-            ModelState.AddModelError("RegisterError",
+            ModelState.AddModelError(RegisterErrorName,
                 string.Join(", ",
                 result.Errors
                     .Where(x => x.Code != "DuplicateUserName")
@@ -56,7 +59,7 @@ public class AccountController(UserManager<UserEntity> userManager, SignInManage
         {
             await _userManager.DeleteAsync(newUser);
 
-            ModelState.AddModelError("RegisterError", "An unknown failure has occured.");
+            ModelState.AddModelError(RegisterErrorName, "An unknown failure has occured.");
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
@@ -90,7 +93,7 @@ public class AccountController(UserManager<UserEntity> userManager, SignInManage
 
         if (!result.Succeeded)
         {
-            ModelState.AddModelError("LoginError", "Invalid email or password.");
+            ModelState.AddModelError(LoginErrorName, "Invalid email or password.");
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
@@ -117,7 +120,7 @@ public class AccountController(UserManager<UserEntity> userManager, SignInManage
         }
         else
         {
-            return RedirectToAction("Index", "Home");
+            return NotFound();
         }
     }
 }

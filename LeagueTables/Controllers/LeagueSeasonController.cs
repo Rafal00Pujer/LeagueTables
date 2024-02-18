@@ -18,14 +18,15 @@ namespace LeagueTables.Controllers
                 .Include(e => e.League)
                 .Include(e => e.Tables)
                     .ThenInclude(e => e.TableScores)
-                        .ThenInclude(e => e.Team);
+                        .ThenInclude(e => e.Team)
+                .AsSplitQuery();
 
             var model = await _mapper.ProjectTo<LeagueSeasonTablesModel>(query)
                 .FirstOrDefaultAsync(e => e.Id == seasonId);
 
             if (model is null)
             {
-                return RedirectToAction("Index","Home");
+                return NotFound();
             }
 
             return View(model);
