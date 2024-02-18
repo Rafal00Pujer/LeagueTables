@@ -10,11 +10,6 @@ public class MatchController(LeagueTablesContext context, IMapper mapper) : Cont
 {
     private readonly LeagueTablesContext _context = context;
     private readonly IMapper _mapper = mapper;
-    [HttpGet]
-    public IActionResult Index()
-    {
-        return Ok("Test dziala.");
-    }
 
     [HttpGet("Match/MatchesForTeamInTable/{tableId:guid}/{teamId:guid}")]
     public async Task<IActionResult> MatchesForTeamInTable(Guid tableId, Guid teamId)
@@ -28,6 +23,6 @@ public class MatchController(LeagueTablesContext context, IMapper mapper) : Cont
 
         var model = await _mapper.ProjectTo<MatchModel>(query).ToListAsync();
 
-        return PartialView("Matches/_MatchesForTeamInTable", model);
+        return PartialView(model);
     }
 }

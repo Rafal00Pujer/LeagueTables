@@ -11,5 +11,7 @@ public class TeamProfile : Profile
         CreateMap<TeamTableScoreEntity, TeamTableScoreModel>();
 
         CreateMap<TeamMatchEntryEntity, TeamMatchScoreModel>();
+
+        CreateMap<TeamEntity, TeamModel>();
     }
 }

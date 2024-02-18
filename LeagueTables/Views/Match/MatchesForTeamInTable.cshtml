@@ -1,0 +1,35 @@
+﻿@model ICollection<LeagueTables.Models.Match.MatchModel>
+
+@foreach (var match in Model)
+{
+    <div class="row py-2 border-1 border">
+        <div class="col-2 pt-2 border-1 border-end">
+            <span>@match.Date</span>
+        </div>
+
+        <div class="col-10">
+
+            @foreach (var (index, score) in Enumerable.Range(0, match.Scores.Count).Zip(match.Scores))
+            {
+                var borderLocationClass = "";
+
+                if (index == 0)
+                {
+                    borderLocationClass += "border-bottom";
+                }
+
+                <div class="row border-1 @borderLocationClass">
+
+                    <div class="col-2">
+                        <span>@score.TeamName</span>
+                    </div>
+
+                    <div class="col-1 border-1 border-start">
+                        <span>@score.Score</span>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+}

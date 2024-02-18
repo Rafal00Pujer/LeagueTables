@@ -1,0 +1,99 @@
+﻿@model ICollection<LeagueTables.Models.Team.TeamModel>
+
+@{
+    ViewData["Title"] = "My favorite teams";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-center">@ViewData["Title"]</h1>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="mt-3">
+        <p class="text-center">You don't have any favorite teams.</p>
+        <p class="text-center">You can add them in the season view in the teams tab.</p>
+    </div>
+}
+else
+{
+    foreach (var (index, team) in Enumerable.Range(0, Model.Count).Zip(Model))
+    {
+        var teamCardId = $"teamCard-{index}";
+
+        <div id="@teamCardId" class="card mt-3">
+            <div class="card-body text-center">
+                <h5 class="card-title">@team.Name</h5>
+
+                <p class="card-text">
+
+                    @if (team.Description is not null)
+                    {
+                        <span>@team.Description</span>
+                    }
+                    else
+                    {
+                        <span>This team has no description.</span>
+                    }
+
+                </p>
+            </div>
+
+            <div class="card-footer text-center">
+                <button class="btn btn-primary"
+                        onclick="RemoveTeamFromFavorite('@Url.Action("RemoveTeamFromFavorite", "Team", new { teamId = team.Id })', '#@teamCardId')">
+                    Remove team from favorite
+                </button>
+            </div>
+
+        </div>
+    }
+}
+
+<div class="toast-container position-fixed top-0 start-0 p-3">
+    <div id="teamRemoveSuccessToast" class="toast align-items-center text-bg-success"
+         role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+
+        <div class="d-flex">
+            <div class="toast-body">
+                Removed team from your favorites.
+            </div>
+
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div id="teamRemoveErrorToast" class="toast align-items-center text-bg-danger"
+         role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+
+        <div class="d-flex">
+            <div class="toast-body">
+                There was an error removing the team from your favorites.
+            </div>
+
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function RemoveTeamFromFavorite(url, cardId) {
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                success: function (result) {
+                    bootstrap.Toast.getOrCreateInstance($('#teamRemoveSuccessToast')).show();
+
+                    $(cardId).remove();
+                },
+                error: function (xhr) {
+                    bootstrap.Toast.getOrCreateInstance($('#teamRemoveErrorToast')).show();
+                }
+            })
+        }
+    </script>
+}

@@ -3,7 +3,6 @@ using LeagueTables.Data.Entities;
 using LeagueTables.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebApplication.CreateBuilder(args);
 
